@@ -5,7 +5,7 @@ class StringCounterApp:
     def __init__(self, master):
         self.master = master
         self.master.title("String Counter App")
-#text
+
         self.label = tk.Label(master, text="Select a file:")
         self.label.pack(pady=10)
 
@@ -14,6 +14,15 @@ class StringCounterApp:
 
         self.result_label = tk.Label(master, text="")
         self.result_label.pack(pady=10)
+
+        self.entry_label = tk.Label(master, text="Enter string for free search:")
+        self.entry_label.pack(pady=5)
+
+        self.entry = tk.Entry(master)
+        self.entry.pack(pady=5)
+
+        self.search_button = tk.Button(master, text="Search", command=self.search_string)
+        self.search_button.pack(pady=10)
 
     def browse_file(self):
         file_path = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
@@ -41,6 +50,22 @@ class StringCounterApp:
             return {"Error": "File not found"}
         except Exception as e:
             return {"Error": str(e)}
+
+    def search_string(self):
+        user_input = self.entry.get()
+        if user_input:
+            try:
+                file_path = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
+                with open(file_path, "r", encoding="utf-8") as file:
+                    content = file.read()
+                    count = content.count(user_input)
+                    self.result_label.config(text=f"Occurrences of '{user_input}': {count}")
+            except FileNotFoundError:
+                self.result_label.config(text="Error: File not found")
+            except Exception as e:
+                self.result_label.config(text=f"Error: {str(e)}")
+        else:
+            self.result_label.config(text="Please enter a string for search")
 
 if __name__ == "__main__":
     root = tk.Tk()
